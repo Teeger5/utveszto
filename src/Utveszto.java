@@ -65,9 +65,7 @@ public class Utveszto {
 		}*/
 		cols = board[0].length;
 
-		top = Arrays.stream(board)
-				.map(z -> Arrays.stream(z).max().getAsInt())
-				.max(Comparator.naturalOrder()).get();
+		top = getMax(board);
 		System.out.println("top: " + top);
 	}
 
@@ -100,18 +98,12 @@ public class Utveszto {
 	 */
 	private boolean findPath(int x, int y, int steps, int nextLvl) {
 		allSteps++;
-		// Check boundaries and constraints
-//		System.out.println("Táblán vagyunk?");
 		if (x < 0 || y < 0 || x >= rows || y >= cols) return false;
 
-		// Skip visited cells and cells that don't match the current number or are not empty
-//		if (board[x][y] != currentNum && board[x][y] != URES) return false;
-//		System.out.println("Meglátogatott?");
 		if (board[y][x] == MEGLATOGATOTT) {
 			return false;
 		}
 
-		// If all numbered cells are visited, the path is complete
 		if (steps > rows * cols) {
 			var result = board[y][x] == top;
 			System.out.println("Minden mező érintve, csúcson vagyunk? " + result);
@@ -128,9 +120,7 @@ public class Utveszto {
 		if (board[y][x] == top) {
 			var temp = board[y][x];
 			board[y][x] = MEGLATOGATOTT;
-			var max = Arrays.stream(board)
-					.map(z -> Arrays.stream(z).max().getAsInt())
-					.max(Comparator.naturalOrder()).get();
+			var max = getMax(board);
 			printBoard(x, y, steps, max);
 			System.out.println("Legnagyobb érték elérve, tábla max: " + max);
 			board[y][x] = temp;
@@ -141,13 +131,11 @@ public class Utveszto {
 			return false;
 		}
 
-		// Mark the cell as visited
 		path.add(new int[]{y, x});
 		int temp = board[y][x];
-		board[y][x] = MEGLATOGATOTT; // Mark as visited
+		board[y][x] = MEGLATOGATOTT;
 
 		steps++;
-		// Try moving in all four non-diagonal directions
 		if (
 				findPath(x + 1, y, steps, nextLevel)
 						|| findPath(x - 1, y, steps, nextLevel)
@@ -156,7 +144,6 @@ public class Utveszto {
 			return true;
 		}
 
-		// Backtrack
 		board[y][x] = temp;
 		path.removeLast();
 		return false;
@@ -172,6 +159,15 @@ public class Utveszto {
 		}
 	}
 
+	/**
+	 * Kiírja a tábla tartalmát, vizualizálva a jelenlegi állapotát
+	 * X a jelenlegi pozíciót jelöli
+	 * --- az eddig megtett utat jelöli
+	 * @param posX jelenlegi X pozíció
+	 * @param posY jelenlegi Y pozíció
+	 * @param steps az út során eddig megtett lépések száma
+	 * @param nextLvl a következő keresett szám a mezők között
+	 */
 	private void printBoard (int posX, int posY, int steps, int nextLvl) {
 		for (int s = 0; s < steps; s++) {
 			System.out.print("   ");
@@ -200,6 +196,21 @@ public class Utveszto {
 		System.out.println();
 	}
 
+	/**
+	 * Megkeresi a legnagyobb értéket egy int mátrixban
+	 * @param matrix a mátrix
+	 * @return a legnagyobb érték a mátrixban
+	 */
+	public int getMax (int[][] matrix) {
+		return Arrays.stream(matrix)
+				.map(z -> Arrays.stream(z).max().getAsInt())
+				.max(Comparator.naturalOrder()).get();
+	}
+
+	/**
+	 * Visszaadja az összes megtett lépés számát (azaz hányszor futott a findPath metódus)
+	 * @return összes megtett lépés száma
+	 */
 	public int getAllSteps() {
 		return allSteps;
 	}
