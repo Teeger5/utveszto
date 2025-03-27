@@ -1,4 +1,4 @@
-# Útválasztó
+# Útvesztő
 Java nyelven írt parancssoros program, ami egy mezőkre osztott táblán olyan utat keres, ami 
 - a legkisebb számot tartalmazó mezőből indul 
 - áthalad minden minden mezőn
