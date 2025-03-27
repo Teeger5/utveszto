@@ -104,12 +104,6 @@ public class Utveszto {
 			return false;
 		}
 
-		if (steps > rows * cols) {
-			var result = board[y][x] == top;
-			System.out.println("Minden mező érintve, csúcson vagyunk? " + result);
-			return board[y][x] == top;
-		}
-
 		var nextLevel = nextLvl;
 		if (board[y][x] == nextLvl) {
 			nextLevel = board[y][x] + 1;
@@ -117,7 +111,13 @@ public class Utveszto {
 
 		printBoard(x, y, steps, nextLvl);
 
-		if (board[y][x] == top) {
+		if (steps == (rows * cols) - 1) {
+			var result = board[y][x] != URES; // == top;
+			System.out.println("Minden mező érintve, csúcson vagyunk? " + result);
+			return result;
+		}
+
+/*		if (board[y][x] == top) {
 			var temp = board[y][x];
 			board[y][x] = MEGLATOGATOTT;
 			var max = getMax(board);
@@ -125,7 +125,7 @@ public class Utveszto {
 			System.out.println("Legnagyobb érték elérve, tábla max: " + max);
 			board[y][x] = temp;
 			return max == MEGLATOGATOTT;
-		}
+		}*/
 
 		if (board[y][x] > nextLvl) {
 			return false;
@@ -187,7 +187,7 @@ public class Utveszto {
 						case MEGLATOGATOTT: System.out.print("---"); break;
 						case URES: System.out.print("   "); break;
 						case KERESZTEZODES: System.out.print(" + "); break;
-						default: System.out.printf(" %2d", board[y][x]); break;
+						default: System.out.printf(" %-2d", board[y][x]); break;
 					}
 				}
 			}
